@@ -1,12 +1,10 @@
-"""OWNER: Dev A (feat/parent-ai).
-
-Used by the onboarding screen: the parent types a Kita code, the UI shows
-"Kita Sonnenblume, Berlin" (or the "Kita code not found" state on 404).
-"""
+"""Used by the onboarding screen: the parent types a Kita code, the UI shows
+"Kita Sonnenblume, Berlin" (or the "Kita code not found" state on 404)."""
 
 from fastapi import APIRouter
 
-from app.errors import NotImplementedYet
+from app.config import get_settings
+from app.errors import NotFound
 from app.schemas import ErrorResponse, KitaInfo
 
 router = APIRouter(tags=["kitas"])
@@ -14,9 +12,8 @@ router = APIRouter(tags=["kitas"])
 
 @router.get("/kitas/{code}", response_model=KitaInfo, responses={404: {"model": ErrorResponse}})
 async def get_kita(code: str) -> KitaInfo:
-    """Look up a Kita by code (case-insensitive). Only one Kita exists: settings.kita_code.
-
-    TODO (Dev A): return KitaInfo from settings (kita_code / kita_name / kita_city);
-    raise NotFound("Kita code not found.") for any other code.
-    """
-    raise NotImplementedYet("dev-a")
+    """Look up a Kita by code (case-insensitive). Only one Kita exists: settings.kita_code."""
+    settings = get_settings()
+    if code.strip().upper() != settings.kita_code.upper():
+        raise NotFound("Kita code not found.")
+    return KitaInfo(code=settings.kita_code, name=settings.kita_name, city=settings.kita_city)
