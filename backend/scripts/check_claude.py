@@ -11,8 +11,18 @@ import os
 import sys
 from pathlib import Path
 
-import anthropic
-from pydantic import BaseModel
+try:
+    import anthropic
+    from pydantic import BaseModel
+except ModuleNotFoundError as e:
+    sys.exit(
+        f"Missing Python package '{e.name}': you are not using the project's virtual environment.\n"
+        "From the backend folder, run:\n"
+        "  python -m venv .venv\n"
+        "  .\\.venv\\Scripts\\python.exe -m pip install -r requirements.txt\n"
+        "  .\\.venv\\Scripts\\python.exe scripts\\check_claude.py\n"
+        "(macOS/Linux: source .venv/bin/activate, then pip install -r requirements.txt)"
+    )
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
