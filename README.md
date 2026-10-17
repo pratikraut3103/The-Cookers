@@ -8,15 +8,15 @@
 
 **What the demo lets them do**
 - **Parents** see their Kita's week in their own language, ask any question and get an answer based on the Kita's own documents (with the source, and "ask the teacher" when the documents don't say), and send the Kita a polite German message drafted by Claude.
-- **Kita staff** write one announcement in German; Claude translates it into five languages with a short cultural note; parents see it straight away. Staff also keep the documents up to date and see which questions the documents can't answer.
+- **Kita staff** write one announcement in German; Claude translates it into English and rewrites it in plain, simple German, each with a short cultural note; parents see it straight away. Staff also keep the documents up to date and see which questions the documents can't answer.
 
-Languages: English, Arabic (right-to-left), Ukrainian, Turkish, Spanish.
+Languages for now: English and German. More languages are a small change (one line in `LANGUAGES`, one field in `TranslationsAI`, seed translations).
 
 ## How Claude is used
 
 - **Ask:** the Kita's documents sit in the system prompt (prompt-cached); Claude answers only from them, cites the source and refuses to guess or give medical advice.
 - **Draft message:** the parent writes in their language, Claude returns polite German plus a back-translation so they know what they send.
-- **Publish:** one Claude call translates a German announcement into all languages; the result is stored, so reading the week board needs no AI call.
+- **Publish:** one Claude call turns a German announcement into English and plain German; the result is stored, so reading the week board needs no AI call.
 
 Model: `claude-sonnet-5-5` through the Anthropic API.
 

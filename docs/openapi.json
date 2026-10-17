@@ -215,10 +215,7 @@
             "default": "en",
             "enum": [
               "en",
-              "ar",
-              "uk",
-              "tr",
-              "es"
+              "de"
             ],
             "title": "Lang",
             "type": "string"
@@ -404,10 +401,7 @@
             "default": "en",
             "enum": [
               "en",
-              "ar",
-              "uk",
-              "tr",
-              "es"
+              "de"
             ],
             "title": "Lang",
             "type": "string"
@@ -451,10 +445,7 @@
           "lang": {
             "enum": [
               "en",
-              "ar",
-              "uk",
-              "tr",
-              "es"
+              "de"
             ],
             "title": "Lang",
             "type": "string"
@@ -635,10 +626,7 @@
           "code": {
             "enum": [
               "en",
-              "ar",
-              "uk",
-              "tr",
-              "es"
+              "de"
             ],
             "title": "Code",
             "type": "string"
@@ -1014,10 +1002,7 @@
           "lang": {
             "enum": [
               "en",
-              "ar",
-              "uk",
-              "tr",
-              "es"
+              "de"
             ],
             "title": "Lang",
             "type": "string"
@@ -1886,10 +1871,7 @@
               "default": "en",
               "enum": [
                 "en",
-                "ar",
-                "uk",
-                "tr",
-                "es"
+                "de"
               ],
               "title": "Lang",
               "type": "string"

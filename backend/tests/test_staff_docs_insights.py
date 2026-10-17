@@ -76,13 +76,13 @@ def test_insights_counts(client, staff):
     ask = f"{API}/ask"
     client.post(ask, json={"question": "fever?", "lang": "en"}, headers={"X-Family-Id": "a"})
     client.post(ask, json={"question": "fever?", "lang": "en"}, headers={"X-Family-Id": "a"})
-    client.post(ask, json={"question": "Can he bring his own lunch?", "lang": "ar"}, headers={"X-Family-Id": "b"})
+    client.post(ask, json={"question": "Can he bring his own lunch?", "lang": "de"}, headers={"X-Family-Id": "b"})
 
     body = client.get(f"{API}/staff/insights", headers=staff).json()
     assert body["questions_this_week"] == 3
     assert body["families"] == 2
     assert {"lang": "en", "count": 1} in body["languages"]
-    assert {"lang": "ar", "count": 1} in body["languages"]
+    assert {"lang": "de", "count": 1} in body["languages"]
     assert body["top_questions"][0] == {"text": "fever?", "count": 2}
     assert body["unanswered"] == [{"text": "Can he bring his own lunch?", "count": 1}]
 

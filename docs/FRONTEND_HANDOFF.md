@@ -23,7 +23,7 @@ Then call relative URLs like `fetch('/api/v1/week?lang=en')`. (Without the proxy
 
 ## Conventions
 
-- Base path `/api/v1`, JSON everywhere. Language codes: `en ar uk tr es` (`GET /languages` also says which are right-to-left).
+- Base path `/api/v1`, JSON everywhere. **Languages: `en` and `de` only, for now.** Build the language picker from `GET /languages` (it returns `code`, `label`, `rtl`) instead of hardcoding it: the design still lists Arabic, Ukrainian, Turkish and Spanish, and any other code gets a 422. Right-to-left support is not needed yet; `rtl` is there so it can come back later without an API change.
 - **Anonymous family id:** generate a random id once (`crypto.randomUUID()`), keep it in `localStorage`, and send it as header `X-Family-Id` on `/ask`. It only lets staff count families.
 - **Staff routes** (`/staff/*` except login) need `Authorization: Bearer <token>`. Get the token from `POST /staff/login` with the Kita code (`SONNE`). Demo login, not real security.
 - **Errors** always look like this, and `message` is safe to show to the user as is:
@@ -73,10 +73,11 @@ When `answered_from_documents` is `false`, `sources` is empty and `suggest_draft
 `parent_name` is optional. **Without it the German message has no signature.** The onboarding has no field for the parent's name yet ("Amira" is hardcoded in the design), so either add one or accept an unsigned message.
 
 ```jsonc
-// GET /api/v1/week?lang=ar   (optional ?today=2026-11-02 to pin the date)
-{"lang": "ar", "generated_for": "2026-11-02", "items": [
-  {"id": 2, "type": "event", "title": "مسيرة الفوانيس (Laternenfest)", "date": "2026-11-05", "time": "17:00",
-   "message": "...", "bring": ["فانوس منزلي الصنع"], "cultural_note": "...", "is_new": false, "recurring": null, "source": null}]}
+// GET /api/v1/week?lang=en   (or lang=de; optional ?today=2026-11-02 to pin the date)
+{"lang": "en", "generated_for": "2026-11-02", "items": [
+  {"id": 2, "type": "event", "title": "Lantern walk (Laternenfest)", "date": "2026-11-05", "time": "17:00",
+   "message": "...", "bring": ["a homemade lantern"], "cultural_note": "A German autumn tradition: ...",
+   "is_new": false, "recurring": null, "source": null}]}
 ```
 - Items are sorted by date; **recurring items have `date: null`** and come last ("Every day").
 - `type` → icon in the design: `deadline` ⚠️ · `event` 🏮 · `closure` 📅 · `reminder` 🧥. `is_new` → the "New" tag.
@@ -86,7 +87,8 @@ When `answered_from_documents` is `false`, `sources` is empty and `suggest_draft
 // POST /api/v1/staff/announcements   (the form must send real values, see below)
 {"type": "event", "title": "Laternenfest", "message": "Am Donnerstag ...", "starts_on": "2026-11-05",
  "time": "17:00", "deadline_on": null, "bring": ["Laterne"], "recurring": null}
-// 201: the same fields plus "id", "published_at" and "translations": {"en": {...}, "ar": {...}, "uk": ..., "tr": ..., "es": ...}
+// 201: the same fields plus "id", "published_at" and "translations": {"en": {...}, "de": {...}}  (each: title, message, bring, cultural_note)
+// "de" is a plain-German rewrite of what staff wrote, "en" a translation. Preview: same body, returns only {"translations": ...}
 ```
 
 ## Things the staff form needs to change
