@@ -8,5 +8,5 @@
   {"question": "Is the Kita open on Friday 6 November?", "lang": "en", "expected_source": "calendar.md"},
   {"question": "Can my son bring his own lunch?", "lang": "en", "expected_source": null},
   {"question": "Is there a photographer day this year?", "lang": "en", "expected_source": null},
-  {"question": "ما هي فترة التأقلم (Eingewöhnung) وكم تستغرق؟", "lang": "ar", "expected_source": null}
+  {"question": "Was ist die Eingewöhnung und wie lange dauert sie?", "lang": "de", "expected_source": null}
 ]

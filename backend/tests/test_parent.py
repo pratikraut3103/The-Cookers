@@ -32,8 +32,8 @@ def test_feedback_unknown_query(client):
     assert r.json()["error"]["code"] == "not_found"
 
 
-def test_all_five_languages_accepted(client):
-    for lang in ("en", "ar", "uk", "tr", "es"):
+def test_supported_languages_accepted(client):
+    for lang in ("en", "de"):
         assert client.post(f"{API}/ask", json={"question": "fever?", "lang": lang}).status_code == 200
         assert client.post(f"{API}/draft-message", json={"text": "late", "lang": lang}).status_code == 200
         assert client.get(f"{API}/week", params={"lang": lang}).status_code == 200

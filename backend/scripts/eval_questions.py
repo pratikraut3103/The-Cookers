@@ -2,7 +2,7 @@
 
     cd backend
     uvicorn app.main:app --port 8000          # in another terminal, with MOCK_AI=false
-    python scripts/eval_questions.py          # or: --base-url http://host:8000 --lang ar
+    python scripts/eval_questions.py          # or: --base-url http://host:8000 --lang de
 
 Not an automatic grader. PASS/CHECK only says whether the expected source was cited (or, for
 questions the documents do not cover, whether the API refused to guess). Read every answer.
@@ -34,7 +34,7 @@ def main() -> int:
     parser.add_argument("--lang", help="override the language of every question")
     args = parser.parse_args()
 
-    sys.stdout.reconfigure(encoding="utf-8")  # Arabic output on Windows consoles
+    sys.stdout.reconfigure(encoding="utf-8")  # German umlauts on Windows consoles
     questions = json.loads(QUESTIONS.read_text(encoding="utf-8"))
     checks = 0
 
