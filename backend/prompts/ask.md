@@ -8,7 +8,7 @@ Fill the fields like this:
 - cultural_note: a short explanation when a German custom or habit is involved, or null.
 - sources: every document (file name) and section you used.
 - answered_from_documents: true only if the documents actually contain the answer.
-- suggest_draft: true if writing a message to the Kita would help the parent.
+- suggest_draft: true whenever the parent will need to contact the Kita to act on your answer (tell the Kita about an absence, lateness or illness, register someone, return a form, or ask something the documents don't cover). false only when the answer is purely informational and needs no contact.
 
 If the documents don't contain the answer: say clearly that you don't know this from the Kita's documents, suggest asking the teacher, set answered_from_documents to false, sources to [] and suggest_draft to true.
 
