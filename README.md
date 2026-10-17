@@ -30,9 +30,10 @@ cd backend
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 copy .env.example .env      # paste your ANTHROPIC_API_KEY, or set MOCK_AI=true to run without one
+.\.venv\Scripts\python.exe scripts\check_claude.py     # optional: checks the key with one tiny call
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
 ```
-API docs: <http://localhost:8000/docs>. On macOS/Linux use `source .venv/bin/activate`, `cp` and `python`.
+API docs: <http://localhost:8000/docs>. If `check_claude.py` says the key is "not scoped to a workspace": create the key inside a workspace in the Claude Console, or put that workspace's id in `ANTHROPIC_WORKSPACE_ID` in `backend/.env`. On macOS/Linux use `source .venv/bin/activate`, `cp` and `python`.
 
 ```powershell
 # frontend (second terminal)
