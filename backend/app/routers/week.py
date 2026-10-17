@@ -1,65 +1,77 @@
-"""OWNER: Dev B (feat/staff-publish).
+"""The parent's "This week" board, read from the announcements store.
 
-Today this asks Claude to read the documents. Dev B replaces build_week() with a read from
-the announcements store (translations by language), so the board is instant and identical
-on every call. Keep the response shape (WeekResponse) unchanged.
+No Claude call happens here: translations were made when staff published, so the board is
+instant and identical on every request. Language fallback: requested language -> English ->
+the German original.
 """
 
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 
 from fastapi import APIRouter, Query
 
 from app.config import get_settings
-from app.schemas import LANGUAGES, ErrorResponse, LangCode, WeekAI, WeekResponse
-from app.services import cache, claude, mock
+from app.schemas import AnnouncementOut, LangCode, Translation, WeekItem, WeekResponse
+from app.services import announcements
+from app.timeutil import berlin_today
 
 router = APIRouter(tags=["week"])
 
+WINDOW_DAYS = 7  # today plus the next six days
+NEW_FOR = timedelta(hours=48)
+
 
 def resolve_today(today: date | None) -> date:
-    return today or get_settings().demo_today or date.today()
+    return today or get_settings().demo_today or berlin_today()
 
 
-async def build_week(lang: str, day: date) -> WeekResponse:
-    key = day.isoformat()
-    if cached := cache.get_week(lang, key):
-        return cached
+def item_date(a: AnnouncementOut) -> date | None:
+    """The date shown on the board. Recurring items have none."""
+    if a.recurring:
+        return None
+    if a.type == "deadline" and a.deadline_on:
+        return a.deadline_on
+    return a.starts_on
 
-    if get_settings().mock_ai:
-        result = mock.week()
-    else:
-        language = LANGUAGES[lang]["name"]
-        messages = [{
-            "role": "user",
-            "content": (
-                f"Today is {day:%A}, {key}. Reply language: {language}.\n"
-                "List everything parents need to know for the next 7 days."
-            ),
-        }]
-        result = await claude.generate("week", messages, WeekAI)
 
-    items = sorted(result.items, key=lambda i: (i.date is None, i.date or ""))
-    response = WeekResponse(items=items, lang=lang, generated_for=key)
-    cache.set_week(lang, key, response)
-    return response
+def pick_translation(a: AnnouncementOut, lang: str) -> Translation:
+    if lang in a.translations:
+        return a.translations[lang]
+    if "en" in a.translations:
+        return a.translations["en"]
+    return Translation(title=a.title, message=a.message, bring=a.bring)
+
+
+def build_week(lang: str, day: date) -> WeekResponse:
+    last_day = day + timedelta(days=WINDOW_DAYS - 1)
+    new_after = datetime.now(timezone.utc) - NEW_FOR
+
+    items = []
+    for a in announcements.list_all():
+        shown = item_date(a)
+        if shown is not None and not (day <= shown <= last_day):
+            continue
+        t = pick_translation(a, lang)
+        items.append(WeekItem(
+            id=a.id, type=a.type, title=t.title,
+            date=shown.isoformat() if shown else None, time=a.time,
+            message=t.message or None, bring=t.bring, cultural_note=t.cultural_note,
+            is_new=datetime.fromisoformat(a.published_at) >= new_after,
+            recurring=a.recurring,
+        ))
+
+    items.sort(key=lambda i: (i.date is None, i.date or "", i.time or ""))  # dated first, recurring last
+    return WeekResponse(items=items, lang=lang, generated_for=day.isoformat())
 
 
 async def prewarm() -> None:
-    """Fill the week cache for the demo languages at startup. Never raises."""
-    import logging
-
-    day = resolve_today(None)
-    for lang in ("en", "de"):
-        try:
-            await build_week(lang, day)
-        except Exception as e:
-            logging.getLogger("kita").warning("Week pre-warm failed for %s: %s", lang, e)
+    """Kept because app.main calls it at startup. Reads are cheap now, so nothing to warm."""
+    return None
 
 
-@router.get("/week", response_model=WeekResponse, responses={502: {"model": ErrorResponse}})
+@router.get("/week", response_model=WeekResponse)
 async def week(
     lang: LangCode = "en",
     today: date | None = Query(default=None, description="Override today's date (YYYY-MM-DD) for demos"),
 ) -> WeekResponse:
     """This week's events, closures, deadlines and things to bring, in the parent's language."""
-    return await build_week(lang, resolve_today(today))
+    return build_week(lang, resolve_today(today))

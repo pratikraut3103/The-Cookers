@@ -1,19 +1,15 @@
-"""OWNER: Dev B (feat/staff-publish). Staff dashboard: write once in German, parents see it
-in their language.
+"""Staff dashboard: write once in German, parents see it in their language.
 
-Flow for POST (publish):
-  1. validate AnnouncementIn
-  2. one Claude call -> TranslationsAI (en, de) via claude.generate(...)
-  3. only if that succeeded: save the announcement + 5 translations
-  4. return AnnouncementOut (so the UI never shows a half-published item)
-In MOCK_AI mode, return deterministic fake translations instead of calling Claude.
+Publishing translates FIRST and saves SECOND. If Claude fails, nothing is stored, so the
+dashboard never shows a half-published item (the shared handler turns AIError into a 502).
 """
 
 from fastapi import APIRouter, Depends
 
 from app.auth import require_staff
-from app.errors import NotImplementedYet
+from app.errors import NotFound
 from app.schemas import AnnouncementIn, AnnouncementOut, ErrorResponse, Ok, PreviewResponse
+from app.services import announcements, translate
 
 router = APIRouter(
     prefix="/staff", tags=["staff: announcements"],
@@ -25,29 +21,41 @@ router = APIRouter(
 @router.get("/announcements", response_model=list[AnnouncementOut])
 async def list_announcements() -> list[AnnouncementOut]:
     """Newest first."""
-    raise NotImplementedYet("dev-b")
+    return announcements.list_all()
 
 
-@router.post("/announcements", response_model=AnnouncementOut, status_code=201)
+@router.post("/announcements", response_model=AnnouncementOut, status_code=201,
+             responses={502: {"model": ErrorResponse}})
 async def create_announcement(body: AnnouncementIn) -> AnnouncementOut:
-    """Translate and publish."""
-    raise NotImplementedYet("dev-b")
+    """Translate into all languages, then publish."""
+    translations = await translate.translate(body)
+    return announcements.create(body, translations)
 
 
-@router.post("/announcements/preview", response_model=PreviewResponse)
+@router.post("/announcements/preview", response_model=PreviewResponse,
+             responses={502: {"model": ErrorResponse}})
 async def preview_announcement(body: AnnouncementIn) -> PreviewResponse:
     """Translate only (the 'Vorschau für Eltern' modal). Nothing is saved."""
-    raise NotImplementedYet("dev-b")
+    return PreviewResponse(translations=await translate.translate(body))
 
 
 @router.put("/announcements/{announcement_id}", response_model=AnnouncementOut,
-            responses={404: {"model": ErrorResponse}})
+            responses={404: {"model": ErrorResponse}, 502: {"model": ErrorResponse}})
 async def update_announcement(announcement_id: int, body: AnnouncementIn) -> AnnouncementOut:
-    """Re-translate and replace."""
-    raise NotImplementedYet("dev-b")
+    """Replace an announcement. Re-translates only when the German text changed."""
+    existing = announcements.get(announcement_id)
+    if existing is None:  # check before spending a Claude call
+        raise NotFound("Announcement not found.")
+    translations = None if announcements.same_source(existing, body) else await translate.translate(body)
+    updated = announcements.update(announcement_id, body, translations)
+    if updated is None:  # deleted between the check and the write
+        raise NotFound("Announcement not found.")
+    return updated
 
 
 @router.delete("/announcements/{announcement_id}", response_model=Ok,
                responses={404: {"model": ErrorResponse}})
 async def delete_announcement(announcement_id: int) -> Ok:
-    raise NotImplementedYet("dev-b")
+    if not announcements.delete(announcement_id):
+        raise NotFound("Announcement not found.")
+    return Ok()
