@@ -114,3 +114,34 @@ def test_ask_is_logged_with_family(client):
     with connect() as c:
         row = c.execute("SELECT family_id, answered_from_documents FROM query_log").fetchone()
     assert (row["family_id"], row["answered_from_documents"]) == ("fam-1", 1)
+
+
+# ---------- announcement input rules (foundation) ----------
+
+def test_announcement_needs_a_date_unless_recurring():
+    from pydantic import ValidationError
+
+    from app.schemas import AnnouncementIn
+
+    with pytest.raises(ValidationError):
+        AnnouncementIn(type="event", title="Sommerfest")
+    AnnouncementIn(type="event", title="Sommerfest", starts_on="2026-11-05")
+    AnnouncementIn(type="reminder", title="Matschhose", recurring="daily")
+
+
+@pytest.mark.parametrize("bad", ["24:00", "9:30", "12:60", "noon"])
+def test_announcement_time_must_be_hh_mm(bad):
+    from pydantic import ValidationError
+
+    from app.schemas import AnnouncementIn
+
+    with pytest.raises(ValidationError):
+        AnnouncementIn(type="event", title="x", starts_on="2026-11-05", time=bad)
+
+
+def test_berlin_today_is_a_date():
+    from datetime import date
+
+    from app.timeutil import berlin_today
+
+    assert isinstance(berlin_today(), date)

@@ -7,7 +7,7 @@ PR to `develop` that everyone sees, never inside a feature branch.
 from datetime import date as Date
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 LangCode = Literal["en", "ar", "uk", "tr", "es"]
 
@@ -155,10 +155,16 @@ class AnnouncementIn(Strict):
     title: str = Field(min_length=1, max_length=120)
     message: str = Field(default="", max_length=1000)
     starts_on: Date | None = Field(default=None, description="Null only when recurring")
-    time: str | None = Field(default=None, pattern=r"^\d{2}:\d{2}$")
+    time: str | None = Field(default=None, pattern=r"^([01]\d|2[0-3]):[0-5]\d$")
     deadline_on: Date | None = None
     bring: list[str] = Field(default_factory=list, max_length=10)
     recurring: Literal["daily"] | None = None
+
+    @model_validator(mode="after")
+    def date_required_unless_recurring(self):
+        if self.recurring is None and self.starts_on is None:
+            raise ValueError("starts_on is required unless the announcement is recurring")
+        return self
 
 
 class Translation(Strict):
