@@ -41,11 +41,12 @@ cd frontend
 pnpm install
 pnpm dev                    # http://localhost:8443
 ```
-The frontend must proxy `/api` to port 8000; see [docs/FRONTEND_HANDOFF.md](docs/FRONTEND_HANDOFF.md).
+The dev server already proxies `/api` to the backend on port 8000, so the UI works without CORS settings. Use `.\scripts\dev.ps1` (add `-Mock` to run without an API key) to start both in one go, then open <http://localhost:8443>. API contract and screen-to-endpoint map: [docs/FRONTEND_HANDOFF.md](docs/FRONTEND_HANDOFF.md).
 
 **Staff login:** Kita code `SONNE` (demo access, not real security).
 
 **Tests:** `cd backend && python -m pytest` (no API key needed; they run in mock mode).
+**UI test:** `.\scripts\e2e.ps1` drives the real UI in Chrome against the real backend (mock AI, throw-away data, about 40 s). `.\scripts\e2e.ps1 -Live` does a smaller run with real Claude answers (a few cents).
 **Check answer quality with a real key:** start the server with `MOCK_AI=false`, then `python scripts/eval_questions.py`.
 
 ## Project layout

@@ -2,6 +2,9 @@
 
 Written for the frontend team. Matches the `kita2` design (branch `design`). Machine-readable contract: [`openapi.json`](openapi.json); live docs with a "Try it out" button: <http://localhost:8000/docs>.
 
+> **Status:** the UI in `frontend/` is wired to this API (`src/api.ts` is the client, `src/i18n.ts` the English/German text, `src/state.tsx` the parent profile). This document stays the contract reference. If you re-export from Figma Make, `src/App.tsx` is overwritten: keep `api.ts`, `i18n.ts`, `state.tsx`, `hooks.ts` and re-apply the data wiring from the git history of this branch.
+> Added to the design: an optional "Your first name" field (needed to sign the German message), a day-and-time pair instead of the free-text date field, a "repeat daily" checkbox for reminders, and a document name prompt for "Dokument hinzufügen". The Calendar screen is still static and the weather chip is still a fixed example.
+
 ## Run the backend
 
 ```powershell
@@ -15,7 +18,7 @@ copy .env.example .env          # set MOCK_AI=true to work without an API key
 
 ## Avoid CORS: proxy `/api`
 
-In `frontend/vite.config.ts`, inside `defineConfig` → `server`:
+Already configured in `frontend/vite.config.ts` (inside `defineConfig` → `server` and `preview`; set `BACKEND_URL` to point elsewhere):
 ```ts
 proxy: { '/api': 'http://localhost:8000' }
 ```
@@ -91,7 +94,7 @@ When `answered_from_documents` is `false`, `sources` is empty and `suggest_draft
 // "de" is a plain-German rewrite of what staff wrote, "en" a translation. Preview: same body, returns only {"translations": ...}
 ```
 
-## Things the staff form needs to change
+## Staff form notes (implemented in the UI)
 
 - "Datum und Uhrzeit" is one free-text field (`Do, 5. Nov, 17:00`). The API needs `starts_on` as `YYYY-MM-DD` and `time` as `HH:MM`: use a date input and a time input.
 - Art des Aushangs → `type`: Veranstaltung `event` · Kita geschlossen `closure` · Frist `deadline` · Erinnerung `reminder`. "Mit Frist" + date → `deadline_on`.

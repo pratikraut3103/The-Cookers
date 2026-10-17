@@ -11,3 +11,5 @@ __pycache__/
 *.pem
 *.key
 .pytest_cache/
+e2e-shots/
+dist/

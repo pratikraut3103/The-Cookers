@@ -1,0 +1,10 @@
+{
+  "description": "Kita Companion connects immigrant parents in Germany with their child's Kita, providing multilingual updates and cultural insights to enhance communication and understanding.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
