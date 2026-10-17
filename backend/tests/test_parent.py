@@ -72,3 +72,25 @@ def test_eval_verdict_marks():
     assert module.verdict("calendar.md", cited).strip() == "CHECK"
     assert module.verdict(None, refused).strip() == "PASS"
     assert module.verdict(None, cited).strip() == "CHECK"
+
+
+def test_ask_tells_claude_todays_date(client, monkeypatch):
+    """Without the date Claude cannot answer 'what do I bring tomorrow?' (it said it did not know what tomorrow is)."""
+    from datetime import date
+
+    from app.config import get_settings
+    from app.schemas import AskAI
+    from app.services import claude
+
+    seen = {}
+
+    async def fake_generate(prompt_name, messages, output):
+        seen["last"] = messages[-1]["content"]
+        return AskAI(answer="ok", answered_from_documents=True, suggest_draft=False)
+
+    monkeypatch.setattr(get_settings(), "mock_ai", False)
+    monkeypatch.setattr(get_settings(), "demo_today", date(2026, 11, 2))
+    monkeypatch.setattr(claude, "generate", fake_generate)
+    assert client.post(f"{API}/ask", json={"question": "What do I bring tomorrow?"}).status_code == 200
+    assert "Today is Monday, 2026-11-02" in seen["last"]
+    assert "<user_question>\nWhat do I bring tomorrow?\n</user_question>" in seen["last"]

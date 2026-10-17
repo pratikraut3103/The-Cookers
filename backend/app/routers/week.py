@@ -12,7 +12,7 @@ from fastapi import APIRouter, Query
 from app.config import get_settings
 from app.schemas import AnnouncementOut, LangCode, Translation, WeekItem, WeekResponse
 from app.services import announcements
-from app.timeutil import berlin_today
+from app.timeutil import kita_today
 
 router = APIRouter(tags=["week"])
 
@@ -21,7 +21,7 @@ NEW_FOR = timedelta(hours=48)
 
 
 def resolve_today(today: date | None) -> date:
-    return today or get_settings().demo_today or berlin_today()
+    return today or kita_today()
 
 
 def item_date(a: AnnouncementOut) -> date | None:

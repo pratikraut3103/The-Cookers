@@ -6,6 +6,7 @@ from app.config import get_settings
 from app.deps import family_id
 from app.schemas import LANGUAGES, AskAI, AskRequest, AskResponse, ErrorResponse
 from app.services import claude, logs, mock
+from app.timeutil import kita_today
 
 router = APIRouter(tags=["ask"])
 
@@ -17,10 +18,12 @@ async def ask(req: AskRequest, family: str | None = Depends(family_id)) -> AskRe
         result = mock.ask(req.question)
     else:
         language = LANGUAGES[req.lang]["name"]
+        today = kita_today()  # in the user message, not the system prompt, so the prompt cache keeps working
         messages = [{"role": t.role, "content": t.content} for t in req.history]
         messages.append({
             "role": "user",
             "content": (
+                f"Today is {today:%A}, {today.isoformat()} (Kita time, Europe/Berlin).\n"
                 f"Reply language: {language}\n\n"
                 f"<user_question>\n{req.question}\n</user_question>"
             ),
