@@ -649,14 +649,14 @@ function Parents({ go }: { go: Go }) {
 }
 
 const calendarEvents: Record<number, { icon: string; title: string; time: string; kind: string }> = {
-  4: { icon: "⚠️", title: "Trip permission slip", time: "Due today", kind: "Deadline" },
-  5: { icon: "🏮", title: "Lantern walk (Laternenfest)", time: "17:00", kind: "Event" },
-  6: { icon: "📅", title: "Kita closed", time: "All day", kind: "Closed" },
+  11: { icon: "⚠️", title: "Trip permission slip", time: "Due today", kind: "Deadline" },
+  12: { icon: "🏮", title: "Lantern walk (Laternenfest)", time: "17:00", kind: "Event" },
+  13: { icon: "📅", title: "Kita closed", time: "All day", kind: "Closed" },
 };
 
 function Calendar({ go }: { go: (s: Screen) => void }) {
   const [month, setMonth] = useState(10);
-  const [selected, setSelected] = useState(5);
+  const [selected, setSelected] = useState(12);
   const year = 2026;
   const monthName = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(new Date(year, month, 1));
   const days = new Date(year, month + 1, 0).getDate();
@@ -669,7 +669,7 @@ function Calendar({ go }: { go: (s: Screen) => void }) {
         <Button variant="tertiary" onClick={() => go("home")}>← Back to home</Button>
         <div className="calendar-heading">
           <div><span className="eyebrow">Kita Sonnenblume</span><h1>Calendar</h1><p>Events, deadlines and closed days in one place.</p></div>
-          <Button variant="secondary" onClick={() => { setMonth(10); setSelected(2); }}>Today · 2 Nov</Button>
+          <Button variant="secondary" onClick={() => { setMonth(10); setSelected(9); }}>Today · 9 Nov</Button>
         </div>
         <div className="calendar-layout">
           <section className="calendar-card">
@@ -684,7 +684,7 @@ function Calendar({ go }: { go: (s: Screen) => void }) {
               {Array.from({ length: days }).map((_, index) => {
                 const day = index + 1;
                 const dayEvent = month === 10 ? calendarEvents[day] : undefined;
-                return <button className={`${selected === day ? "selected" : ""} ${day === 2 && month === 10 ? "today" : ""}`} onClick={() => setSelected(day)} key={day}><span>{day}</span>{dayEvent && <i aria-label={dayEvent.title}>{dayEvent.icon}</i>}</button>;
+                return <button className={`${selected === day ? "selected" : ""} ${day === 9 && month === 10 ? "today" : ""}`} onClick={() => setSelected(day)} key={day}><span>{day}</span>{dayEvent && <i aria-label={dayEvent.title}>{dayEvent.icon}</i>}</button>;
               })}
             </div>
           </section>
@@ -695,9 +695,9 @@ function Calendar({ go }: { go: (s: Screen) => void }) {
               <Tag kind={event.kind === "Deadline" ? "deadline" : event.kind === "Closed" ? "closed" : "new"}>{event.kind}</Tag>
               <h2>{event.title}</h2>
               <p className="detail-time">{event.time}</p>
-              {selected === 5 && <><div className="culture"><span>💡</span><p>A German autumn tradition: children walk through the streets with lanterns and sing songs. Parents usually come along.</p></div><p><b>Bring:</b> a homemade lantern</p><Button className="full" onClick={() => go("ask")}>Ask about this →</Button></>}
-              {selected === 4 && <p>Sign the paper and give it to the teacher.</p>}
-              {selected === 6 && <p>Please plan other childcare for this day.</p>}
+              {selected === 12 && <><div className="culture"><span>💡</span><p>A German autumn tradition: children walk through the streets with lanterns and sing songs. Parents usually come along.</p></div><p><b>Bring:</b> a homemade lantern</p><Button className="full" onClick={() => go("ask")}>Ask about this →</Button></>}
+              {selected === 11 && <p>Sign the paper and give it to the teacher.</p>}
+              {selected === 13 && <p>Please plan other childcare for this day.</p>}
             </> : <div className="no-event"><span>🌻</span><h3>No Kita events</h3><p>There is nothing planned for this day.</p></div>}
           </aside>
         </div>
@@ -709,7 +709,7 @@ function DesignSystem({ go }: { go: (s: Screen) => void }) {
   return <main className="system-page"><div className="system-head"><Logo onClick={() => go("welcome")} /><Button variant="secondary" onClick={() => go("welcome")}>← Back to prototype</Button></div><span className="eyebrow">Shared foundation</span><h1>Kita Companion design system</h1><p>Warm, calm, trustworthy and inclusive. Built for quick understanding in LTR and RTL.</p>
     <section><h2>Colour & type</h2><div className="swatches">{[["Warm canvas", "#FBF8F3"], ["Sunflower", "#F2B705"], ["Deep teal", "#2F8F83"], ["Ink", "#1F2A2E"], ["Lavender", "#F1EDFB"], ["Success", "#2E9E5B"]].map(x => <div key={x[0]}><i style={{ background: x[1] }} /><b>{x[0]}</b><small>{x[1]}</small></div>)}</div></section>
     <section><h2>Actions & status</h2><div className="component-row"><Button>Primary action</Button><Button variant="secondary">Secondary</Button><Button variant="tertiary">Tertiary link</Button><Tag kind="deadline">⚠ Deadline</Tag><Tag kind="closed">⊘ Closed</Tag><Tag>New</Tag><Tag kind="success">✓ Published</Tag></div></section>
-    <section><h2>Core components</h2><div className="system-grid"><EventCard icon="🏮" date="Thu 5 Nov, 17:00" title="Lantern walk (Laternenfest)" bring="Bring: a homemade lantern" note="A German autumn tradition. Parents usually come along." tag={<Tag>New</Tag>} /><AnswerCard /></div></section>
+    <section><h2>Core components</h2><div className="system-grid"><EventCard icon="🏮" date="Thu 12 Nov, 17:00" title="Lantern walk (Laternenfest)" bring="Bring: a homemade lantern" note="A German autumn tradition. Parents usually come along." tag={<Tag>New</Tag>} /><AnswerCard /></div></section>
     <section><h2>Parent states</h2><div className="state-grid"><div className="skeleton-card"><p>Reading your Kita's documents…</p><i /><i /><i /></div><div className="state-card"><b>🌻 No news this week</b><p>New information will appear here.</p></div><div className="state-card error"><b>! Something went wrong</b><p>Please try again in a moment.</p></div><div className="state-card"><b>⌂ Kita code not found</b><p>We can't find this Kita code. Please check with your Kita.</p></div></div></section>
     <section><h2>Kita staff states</h2><div className="state-grid"><div className="state-card"><b>📢 Noch keine Aushänge</b><p>Schreiben Sie den ersten!</p></div><div className="state-card error"><b>! Etwas ist schiefgelaufen</b><p>Bitte versuchen Sie es gleich noch einmal.</p></div><div className="state-card"><b>⌂ Kita-Code nicht gefunden</b><p>Bitte prüfen Sie den Code und versuchen Sie es erneut.</p></div><div className="state-card"><b>✓ Gespeichert</b><p>Die App nutzt ab jetzt die neue Version.</p></div></div></section>
   </main>;

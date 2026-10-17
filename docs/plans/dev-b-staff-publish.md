@@ -40,9 +40,9 @@ Called once at startup; when the table is empty, insert these (German source, re
 
 | Type | German title | Date | Time | Bring |
 |---|---|---|---|---|
-| deadline | Ausflug: Einverständniserklärung unterschreiben | 2026-11-04 | | |
-| event | Laternenfest | 2026-11-05 | 17:00 | Laterne |
-| closure | Kita geschlossen (Teamfortbildung) | 2026-11-06 | | |
+| deadline | Ausflug: Einverständniserklärung unterschreiben | 2026-11-11 | | |
+| event | Laternenfest | 2026-11-12 | 17:00 | Laterne |
+| closure | Kita geschlossen (Teamfortbildung) | 2026-11-13 | | |
 | reminder (recurring `daily`) | Matschhose und Gummistiefel mitbringen | none | | Matschhose, Gummistiefel |
 
 Seeded items ship both `en` and `de`. **Fallback rule** (for any announcement that lacks the requested language) (implement it in the week code): if the requested language has no translation, use `en`; if there is no `en` either, use the German source.

@@ -31,7 +31,7 @@ Copy-Item (Join-Path $backend "data\kita-sonnenblume") (Join-Path $work "data") 
 $env:MOCK_AI = if ($Live) { "false" } else { "true" }
 $env:DATA_DIR = Join-Path $work "data"
 $env:DB_PATH = Join-Path $work "kita.db"
-$env:DEMO_TODAY = "2026-11-02"
+$env:DEMO_TODAY = "2026-11-09"
 $env:SHOTS = Join-Path $work "screenshots"
 
 $procs = @()

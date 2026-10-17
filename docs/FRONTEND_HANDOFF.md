@@ -76,9 +76,9 @@ When `answered_from_documents` is `false`, `sources` is empty and `suggest_draft
 `parent_name` is optional. **Without it the German message has no signature.** The onboarding has no field for the parent's name yet ("Amira" is hardcoded in the design), so either add one or accept an unsigned message.
 
 ```jsonc
-// GET /api/v1/week?lang=en   (or lang=de; optional ?today=2026-11-02 to pin the date)
-{"lang": "en", "generated_for": "2026-11-02", "items": [
-  {"id": 2, "type": "event", "title": "Lantern walk (Laternenfest)", "date": "2026-11-05", "time": "17:00",
+// GET /api/v1/week?lang=en   (or lang=de; optional ?today=2026-11-09 to pin the date)
+{"lang": "en", "generated_for": "2026-11-09", "items": [
+  {"id": 2, "type": "event", "title": "Lantern walk (Laternenfest)", "date": "2026-11-12", "time": "17:00",
    "message": "...", "bring": ["a homemade lantern"], "cultural_note": "A German autumn tradition: ...",
    "is_new": false, "recurring": null, "source": null}]}
 ```
@@ -88,7 +88,7 @@ When `answered_from_documents` is `false`, `sources` is empty and `suggest_draft
 
 ```jsonc
 // POST /api/v1/staff/announcements   (the form must send real values, see below)
-{"type": "event", "title": "Laternenfest", "message": "Am Donnerstag ...", "starts_on": "2026-11-05",
+{"type": "event", "title": "Laternenfest", "message": "Am Donnerstag ...", "starts_on": "2026-11-12",
  "time": "17:00", "deadline_on": null, "bring": ["Laterne"], "recurring": null}
 // 201: the same fields plus "id", "published_at" and "translations": {"en": {...}, "de": {...}}  (each: title, message, bring, cultural_note)
 // "de" is a plain-German rewrite of what staff wrote, "en" a translation. Preview: same body, returns only {"translations": ...}
@@ -96,7 +96,7 @@ When `answered_from_documents` is `false`, `sources` is empty and `suggest_draft
 
 ## Staff form notes (implemented in the UI)
 
-- "Datum und Uhrzeit" is one free-text field (`Do, 5. Nov, 17:00`). The API needs `starts_on` as `YYYY-MM-DD` and `time` as `HH:MM`: use a date input and a time input.
+- "Datum und Uhrzeit" is one free-text field (`Do, 12. Nov, 17:00`). The API needs `starts_on` as `YYYY-MM-DD` and `time` as `HH:MM`: use a date input and a time input.
 - Art des Aushangs → `type`: Veranstaltung `event` · Kita geschlossen `closure` · Frist `deadline` · Erinnerung `reminder`. "Mit Frist" + date → `deadline_on`.
 - "Bitte mitbringen" is one input: split it on commas into the `bring` list.
 - A daily reminder (Matschhose) sends `recurring: "daily"` and no `starts_on`.

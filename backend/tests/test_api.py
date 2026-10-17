@@ -54,10 +54,10 @@ def test_removed_languages_are_rejected(client, lang):
 
 
 def test_week(client):
-    r = client.get(f"{API}/week", params={"lang": "en", "today": "2026-11-04"})
+    r = client.get(f"{API}/week", params={"lang": "en", "today": "2026-11-11"})
     assert r.status_code == 200
     body = r.json()
-    assert body["generated_for"] == "2026-11-04"
+    assert body["generated_for"] == "2026-11-11"
     dates = [i["date"] for i in body["items"] if i["date"]]
     assert dates == sorted(dates)
 
@@ -133,7 +133,7 @@ def test_announcement_needs_a_date_unless_recurring():
 
     with pytest.raises(ValidationError):
         AnnouncementIn(type="event", title="Sommerfest")
-    AnnouncementIn(type="event", title="Sommerfest", starts_on="2026-11-05")
+    AnnouncementIn(type="event", title="Sommerfest", starts_on="2026-11-12")
     AnnouncementIn(type="reminder", title="Matschhose", recurring="daily")
 
 
@@ -144,7 +144,7 @@ def test_announcement_time_must_be_hh_mm(bad):
     from app.schemas import AnnouncementIn
 
     with pytest.raises(ValidationError):
-        AnnouncementIn(type="event", title="x", starts_on="2026-11-05", time=bad)
+        AnnouncementIn(type="event", title="x", starts_on="2026-11-12", time=bad)
 
 
 def test_berlin_today_is_a_date():

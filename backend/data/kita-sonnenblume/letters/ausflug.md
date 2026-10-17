@@ -4,7 +4,7 @@
 
 Liebe Eltern,
 
-am Donnerstag, 12. November, fahren wir mit der U-Bahn ins Naturkundemuseum. Bitte unterschreiben Sie die Einverständniserklärung und geben Sie sie bis Mittwoch, 4. November, in der Gruppe ab. Ohne Unterschrift kann Ihr Kind nicht mitfahren.
+am Donnerstag, 19. November, fahren wir mit der U-Bahn ins Naturkundemuseum. Bitte unterschreiben Sie die Einverständniserklärung und geben Sie sie bis Mittwoch, 11. November, in der Gruppe ab. Ohne Unterschrift kann Ihr Kind nicht mitfahren.
 
 Bitte geben Sie Ihrem Kind einen Rucksack mit Frühstück und einer Trinkflasche mit.
 

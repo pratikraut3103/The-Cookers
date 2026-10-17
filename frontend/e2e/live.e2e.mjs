@@ -107,7 +107,7 @@ await step("staff publishes a German announcement; parents read a real English t
   await click(/Anmelden/);
   await page.locator(".form-grid label.wide input").first().fill("Sommerfest im Garten");
   await page.locator(".form-card textarea").fill("Am Freitag um 16 Uhr feiern wir unser Sommerfest im Garten. Bitte bringen Sie einen Kuchen oder Obst für das Buffet mit. Alle Familien sind herzlich eingeladen!");
-  await page.locator('input[aria-label="Datum"]').fill("2026-11-05");
+  await page.locator('input[aria-label="Datum"]').fill("2026-11-12");
   await page.locator('input[aria-label="Uhrzeit"]').fill("16:00");
   await page.locator(".form-grid label", { hasText: "Bitte mitbringen" }).locator("input").fill("Kuchen oder Obst");
   await click(/Veröffentlichen/);
@@ -119,7 +119,7 @@ await step("staff publishes a German announcement; parents read a real English t
   const title = await card.locator("h3").innerText();
   assert.ok(!title.startsWith("["), `still a mock translation: ${title}`);
   // the page is in German here (profile language), so check the English version through the API too
-  const en = await (await fetch(`${UI}/api/v1/week?lang=en&today=2026-11-02`)).json();
+  const en = await (await fetch(`${UI}/api/v1/week?lang=en&today=2026-11-09`)).json();
   const item = en.items.find((i) => /Sommerfest/i.test(i.title));
   assert.ok(item && /party|festival/i.test(item.title), `English title: ${item?.title}`);
   await page.screenshot({ path: `${SHOTS}/live-6-parent-sees-it.png`, fullPage: true });

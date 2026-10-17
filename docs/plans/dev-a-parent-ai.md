@@ -41,7 +41,7 @@ Then tune `prompts/ask.md` until all four behave. Also check the server log: the
 `scripts/eval_questions.py` reads `tests/eval_questions.json` (10 questions from the domain expert, each with `question`, `lang`, `expected_source` or `null`) and calls the running API (or `claude.generate` directly). Print question, answer, sources, `answered_from_documents`, and a PASS/CHECK marker when the expected source is (not) cited. Include 3 questions the documents do not cover. This is for a human to read, not an automatic grader.
 
 ### A6. Real document pack (ongoing, with the domain expert)
-Replace the placeholder files in `data/kita-sonnenblume/`. **Keep these demo facts** so the frontend, seed data and tests stay consistent: today is Mon 2 Nov 2026 · permission slip due Wed 4 Nov · Laternenfest Thu 5 Nov 17:00 (bring a homemade lantern) · Kita closed Fri 6 Nov (staff training) · fever rule: 24 h fever-free (house rules §4) · Matschhose and Gummistiefel every day (§5). Fake data only; no real names, phones or addresses.
+Replace the placeholder files in `data/kita-sonnenblume/`. **Keep these demo facts** so the frontend, seed data and tests stay consistent: today is Mon 9 Nov 2026 · permission slip due Wed 11 Nov · Laternenfest Thu 12 Nov 17:00 (bring a homemade lantern) · Kita closed Fri 13 Nov (staff training) · fever rule: 24 h fever-free (house rules §4) · Matschhose and Gummistiefel every day (§5). Fake data only; no real names, phones or addresses.
 
 ## Rules for your code
 - Mock mode must keep working: `services/mock.py` answers "fever" with the §4 rule and anything else with "ask the teacher".

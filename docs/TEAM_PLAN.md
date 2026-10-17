@@ -82,7 +82,7 @@ copy .env.example .env               # set MOCK_AI=true, or paste your Console A
 | A3 | Pass `child_name` / `parent_name` into the draft prompt; update `prompts/draft_message.md` (sign with the parent's name, name the child) | 15 min |
 | A4 | **Real-key quality pass** (`MOCK_AI=false`): ask the fever, Eingewöhnung, Laternenfest and "own lunch" questions in `en` and `de`; tune `prompts/ask.md`. Check in the server log that the second identical call shows `cache_read` above 0 | 30 min |
 | A5 | `scripts/eval_questions.py` + `tests/eval_questions.json`: the domain expert's 10 questions, runs against the real API, prints answer, source and `answered_from_documents` for a human to check. Include 3 questions the documents do not cover | 25 min |
-| A6 | With the domain expert, replace the placeholder pack in `data/kita-sonnenblume/` with the real one. **Keep the demo facts:** today is Mon 2 Nov 2026, permission slip due Wed 4 Nov, Laternenfest Thu 5 Nov 17:00, Kita closed Fri 6 Nov, 24 h fever rule in house rules §4 | ongoing |
+| A6 | With the domain expert, replace the placeholder pack in `data/kita-sonnenblume/` with the real one. **Keep the demo facts:** today is Mon 9 Nov 2026, permission slip due Wed 11 Nov, Laternenfest Thu 12 Nov 17:00, Kita closed Fri 13 Nov, 24 h fever rule in house rules §4 | ongoing |
 
 Mock mode must keep working: `services/mock.py` answers "fever" questions with the §4 rule.
 
@@ -93,7 +93,7 @@ Mock mode must keep working: `services/mock.py` answers "fever" questions with t
 | B1 | Repository in `services/announcements.py`: create, list (newest first), get, update, delete, with translations (tables exist in `app/db.py`; `bring` is stored as JSON text) | 25 min |
 | B2 | `prompts/translate_announcement.md` and `services/translate.py`: `translate(AnnouncementIn) -> TranslationsAI` through `claude.generate("translate_announcement", messages, TranslationsAI)`. Output: title, message, bring and a short cultural note per language, simple words. In `MOCK_AI` mode return deterministic fake text, e.g. `"[ar] Sommerfest"` | 25 min |
 | B3 | Routes in `routers/staff_announcements.py` (publish, preview, update, delete, list). **Translate first, save second**: if Claude fails, nothing is saved (a test checks this) | 20 min |
-| B4 | `seed_if_empty()` + `data/seed/announcements.json` (German): permission slip deadline Wed 2026-11-04, Laternenfest Thu 2026-11-05 17:00 (bring: Laterne), closure Fri 2026-11-06, and a **daily** reminder for Matschhose und Gummistiefel. Store ready-made translations in the seed so it needs no Claude call | 20 min |
+| B4 | `seed_if_empty()` + `data/seed/announcements.json` (German): permission slip deadline Wed 2026-11-11, Laternenfest Thu 2026-11-12 17:00 (bring: Laterne), closure Fri 2026-11-13, and a **daily** reminder for Matschhose und Gummistiefel. Store ready-made translations in the seed so it needs no Claude call | 20 min |
 | B5 | `routers/week.py`: build the board from the store: items whose date is within 7 days of `today` plus recurring ones; text from the requested language's translation; `is_new` = published in the last 48 h; sort by date, recurring last. Keep `WeekResponse` unchanged. The Claude-based path can be deleted | 25 min |
 
 Do not call Claude from `GET /week`; it must be instant and identical every time.

@@ -42,12 +42,12 @@ def draft(text: str, child_name: str | None = None, parent_name: str | None = No
 
 def week() -> WeekAI:
     return WeekAI(items=[
-        WeekItem(type="deadline", title="Sign the trip permission slip", date="2026-11-04",
+        WeekItem(type="deadline", title="Sign the trip permission slip", date="2026-11-11",
                  source=Source(document="letters/ausflug.md")),
-        WeekItem(type="event", title="Lantern walk (Laternenfest)", date="2026-11-05", time="17:00",
+        WeekItem(type="event", title="Lantern walk (Laternenfest)", date="2026-11-12", time="17:00",
                  bring=["a homemade lantern", "warm clothes"],
                  cultural_note="A German tradition for St. Martin: children walk with lanterns and sing.",
                  source=Source(document="letters/laternenfest.md")),
-        WeekItem(type="closure", title="Kita closed (staff training)", date="2026-11-06",
+        WeekItem(type="closure", title="Kita closed (staff training)", date="2026-11-13",
                  source=Source(document="calendar.md")),
     ])

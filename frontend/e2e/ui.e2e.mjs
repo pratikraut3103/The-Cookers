@@ -94,7 +94,7 @@ await step("onboarding: fill in and continue to the home screen", async () => {
 
 await step("home: greeting uses the names and the real date from the server", async () => {
   assert.match(await page.locator(".greeting p").innerText(), /Yusuf's Kita/);
-  assert.match(await page.locator(".greeting .date").innerText(), /2 november 2026/i); // DEMO_TODAY from the backend (the CSS shows it in capitals)
+  assert.match(await page.locator(".greeting .date").innerText(), /9 november 2026/i); // DEMO_TODAY from the backend (the CSS shows it in capitals)
 });
 
 await step("home: week board shows the real announcements from the database", async () => {
@@ -103,7 +103,7 @@ await step("home: week board shows the real announcements from the database", as
   for (const expected of ["Sign the trip permission slip", "Lantern walk (Laternenfest)", "Kita closed (staff training)"]) {
     assert.ok(titles.some((t) => t.includes(expected)), `missing "${expected}" in ${JSON.stringify(titles)}`);
   }
-  assert.match(await page.locator(".week .eyebrow").innerText(), /mon 2/i);
+  assert.match(await page.locator(".week .eyebrow").innerText(), /mon 9/i);
   await shot("03-home-en");
 });
 
@@ -250,7 +250,7 @@ await step("publish: an incomplete form is rejected before anything is sent", as
 await step("publish: preview shows the English and German versions", async () => {
   await page.locator(".form-grid label.wide input").first().fill("Sommerfest");
   await page.locator(".form-card textarea").fill("Am Freitag feiern wir unser Sommerfest. Bitte bringen Sie Kuchen mit.");
-  await page.locator('input[aria-label="Datum"]').fill("2026-11-05");
+  await page.locator('input[aria-label="Datum"]').fill("2026-11-12");
   await page.locator('input[aria-label="Uhrzeit"]').fill("16:00");
   await page.locator(".form-grid label", { hasText: "Bitte mitbringen" }).locator("input").fill("Kuchen");
   await click(/Vorschau für Eltern/);
