@@ -1,0 +1,102 @@
+[
+  {
+    "type": "deadline",
+    "title": "Ausflug: Einverständniserklärung unterschreiben",
+    "message": "Bitte unterschreiben Sie die Einverständniserklärung und geben Sie sie in der Gruppe ab.",
+    "starts_on": "2026-11-04",
+    "time": null,
+    "deadline_on": "2026-11-04",
+    "bring": [],
+    "recurring": null,
+    "published_at": "2026-10-01T08:00:00+00:00",
+    "translations": {
+      "en": {
+        "title": "Sign the trip permission slip",
+        "message": "Sign the paper and give it to the teacher.",
+        "bring": [],
+        "cultural_note": "In Germany, Kitas need written permission from parents for every trip outside the Kita."
+      },
+      "ar": {
+        "title": "وقّع إذن الرحلة",
+        "message": "وقّع الورقة وأعطها للمربية.",
+        "bring": [],
+        "cultural_note": "تحتاج الروضات في ألمانيا إلى إذن مكتوب من الوالدين لكل رحلة خارج الروضة."
+      }
+    }
+  },
+  {
+    "type": "event",
+    "title": "Laternenfest",
+    "message": "Am Donnerstag feiern wir unser Laternenfest. Bitte basteln Sie mit Ihrem Kind eine Laterne und bringen Sie sie um 17 Uhr mit. Eltern sind herzlich eingeladen!",
+    "starts_on": "2026-11-05",
+    "time": "17:00",
+    "deadline_on": null,
+    "bring": ["Laterne"],
+    "recurring": null,
+    "published_at": "2026-10-01T08:00:00+00:00",
+    "translations": {
+      "en": {
+        "title": "Lantern walk (Laternenfest)",
+        "message": "On Thursday we celebrate our lantern festival. Please make a lantern at home with your child and bring it at 5 pm. Parents are warmly invited!",
+        "bring": ["a homemade lantern"],
+        "cultural_note": "A German autumn tradition: children walk through the streets with lanterns and sing songs. Parents usually come along."
+      },
+      "ar": {
+        "title": "مسيرة الفوانيس (Laternenfest)",
+        "message": "يوم الخميس نحتفل بمهرجان الفوانيس. يرجى صنع فانوس في المنزل مع طفلكم وإحضاره الساعة 17:00. الأهالي مدعوون بحرارة!",
+        "bring": ["فانوس منزلي الصنع"],
+        "cultural_note": "تقليد خريفي ألماني: يمشي الأطفال بالفوانيس ويغنون. عادةً يشارك الوالدان."
+      }
+    }
+  },
+  {
+    "type": "closure",
+    "title": "Kita geschlossen (Teamfortbildung)",
+    "message": "Am Freitag bleibt die Kita wegen einer Teamfortbildung geschlossen.",
+    "starts_on": "2026-11-06",
+    "time": null,
+    "deadline_on": null,
+    "bring": [],
+    "recurring": null,
+    "published_at": "2026-10-01T08:00:00+00:00",
+    "translations": {
+      "en": {
+        "title": "Kita closed (staff training)",
+        "message": "On Friday the Kita is closed for staff training.",
+        "bring": [],
+        "cultural_note": "Please plan other childcare for this day."
+      },
+      "ar": {
+        "title": "الروضة مغلقة (تدريب الموظفين)",
+        "message": "يوم الجمعة تبقى الروضة مغلقة بسبب تدريب الموظفين.",
+        "bring": [],
+        "cultural_note": "يرجى ترتيب رعاية أخرى لطفلك في هذا اليوم."
+      }
+    }
+  },
+  {
+    "type": "reminder",
+    "title": "Matschhose und Gummistiefel mitbringen",
+    "message": "Bitte geben Sie Ihrem Kind täglich Matschhose, Gummistiefel und Wechselkleidung mit.",
+    "starts_on": null,
+    "time": null,
+    "deadline_on": null,
+    "bring": ["Matschhose", "Gummistiefel"],
+    "recurring": "daily",
+    "published_at": "2026-10-01T08:00:00+00:00",
+    "translations": {
+      "en": {
+        "title": "Bring rain trousers and rain boots (Matschhose)",
+        "message": "Please send your child every day with rain trousers, rain boots and a change of clothes.",
+        "bring": ["rain trousers", "rain boots"],
+        "cultural_note": "German Kitas go outside in every weather, also in rain and cold."
+      },
+      "ar": {
+        "title": "أحضر بنطال المطر وحذاء المطر (Matschhose)",
+        "message": "يرجى إرسال طفلكم كل يوم مع بنطال المطر وحذاء المطر وملابس للتبديل.",
+        "bring": ["بنطال المطر", "حذاء المطر"],
+        "cultural_note": "تخرج الروضات الألمانية في كل أنواع الطقس، حتى في المطر والبرد."
+      }
+    }
+  }
+]
