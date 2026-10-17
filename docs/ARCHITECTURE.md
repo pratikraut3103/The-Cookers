@@ -36,7 +36,7 @@ The staff side is **out of scope in the design doc** ("no Kita staff features, n
 Principles:
 - **Stateless API, tiny store.** SQLite (stdlib `sqlite3`, no server) holds only announcements, translations and anonymous logs. No parent accounts, no names.
 - **Documents in the prompt, no RAG.** Unchanged. Staff edits write the `.md` file and reset the cached prompt.
-- **Translate on publish, not on read.** Staff writes German once. On publish, one Claude call returns all 5 languages plus the cultural note. `GET /week` then reads from the DB: fast, identical on every call, safe for the live demo.
+- **Translate on publish, not on read.** Staff writes German once. On publish, one Claude call returns every supported language (English and German for now) plus the cultural note. `GET /week` then reads from the DB: fast, identical on every call, safe for the live demo.
 - **Every Claude call goes through `services/claude.py`** (model, timeout, retry, error mapping), as today.
 
 ## 3. Endpoint map (screen to API)
@@ -46,7 +46,7 @@ Status: ✅ built · 🟡 built, needs a change · ⬜ not built
 | Screen | Endpoint | Status |
 |---|---|---|
 | Onboarding: Kita code check | `GET /kitas/{code}` → `{name, city}` (404 → "Kita code not found" state) | ⬜ |
-| Onboarding / settings: language list | `GET /languages` (add `es`) | 🟡 |
+| Onboarding / settings: language list | `GET /languages` (English and German only) | ✅ |
 | Home: This week | `GET /week?lang=` (read from DB, see §4) | 🟡 |
 | Home / Ask / Not-found: chat | `POST /ask` (add `id`; `answered_from_documents=false` drives the not-found card) | 🟡 |
 | Answer 👍👎 | `POST /feedback` `{query_id, helpful}` | ⬜ |
@@ -79,7 +79,7 @@ Status: ✅ built · 🟡 built, needs a change · ⬜ not built
 
 **Parent asks:** `POST /ask` → build messages → Claude (cached documents as system prompt) → validated JSON → log row → response with `id`.
 
-**Staff publishes:** `POST /staff/announcements` → save German row → one Claude call returns `{lang: {title, message, bring, cultural_note}}` for en, ar, uk, tr, es → save translations → return the announcement. On Claude failure: save nothing and return the friendly 502, so the UI never shows a half-published item.
+**Staff publishes:** `POST /staff/announcements` → save German row → one Claude call returns `{lang: {title, message, bring, cultural_note}}` for en and de → save translations → return the announcement. On Claude failure: save nothing and return the friendly 502, so the UI never shows a half-published item.
 
 **Staff edits a document:** `PUT /staff/documents/{name}` → validate name (no path separators, `.md` only, size cap) → write file → clear `documents_block()` and prompt caches → the next `/ask` uses the new text and the prompt cache rebuilds once.
 
@@ -92,7 +92,7 @@ Status: ✅ built · 🟡 built, needs a change · ⬜ not built
 | **Auth** | Demo only. Kita code `SONNE` returns a fixed bearer token; `/staff/*` requires it. This is **not real security**, and the UI already says "Demo-Zugang · Keine echten Daten". Never use real data. |
 | **CORS** | The Vite dev server is on port **8443** (`strictPort`), which was missing from `.env.example`. Figma's preview may serve from another origin, so the frontend should proxy `/api` to `localhost:8000` in `vite.config.ts` (`server.proxy`) to avoid CORS entirely. |
 | **Fake numbers in the UI** | "14 Familien verbunden", "gesehen von 11 von 14", "Light rain · 9°" and "38 Fragen" are hardcoded. Real versions need the `families` table and a seen-tracking call; the weather needs an external API. Recommend keeping them mocked for the demo and not claiming otherwise in the video. |
-| **Languages** | Frontend offers 5 (en, ar, uk, tr, **es**). The backend has 4. Add `es`. |
+| **Languages** | **English and German only, for now** (decision: fewer languages, each one checked properly). The frontend design still lists more (incl. right-to-left Arabic): it must build its picker from `GET /languages`. More languages later = one line in `LANGUAGES`, one field in `TranslationsAI`, seed translations. |
 | **Prompt injection** | Staff-edited documents and parent text are both treated as data in the prompts (tags plus an explicit rule). Keep it that way for announcement text. |
 | **Concurrency** | Single process, SQLite, in-memory caches. Fine for a demo; do not run multiple workers. |
 | **Seed data** | `data/seed/announcements.json` (hand-written, German) is loaded on first start, so `/week` is never empty and the demo does not depend on a live publish. |
@@ -101,7 +101,7 @@ Status: ✅ built · 🟡 built, needs a change · ⬜ not built
 
 | Tier | Scope | Why |
 |---|---|---|
-| **P0: parent flow** | Wire `/week`, `/ask`, `/draft-message` to the UI; add `es`, `child_name`/`parent_name`, query `id`; `GET /kitas/{code}`; CORS/proxy fix | This is the demo (Impact 40 + Working demo 20). Largely built. |
+| **P0: parent flow** | Wire `/week`, `/ask`, `/draft-message` to the UI; add `child_name`/`parent_name`, query `id`; `GET /kitas/{code}`; CORS/proxy fix | This is the demo (Impact 40 + Working demo 20). Largely built. |
 | **P1: publish loop** | SQLite store, seed JSON, `/staff/login`, announcements CRUD with translate-on-publish, preview, `/week` from DB | Strong second half of the demo: staff posts once, the parent sees it in Arabic. |
 | **P2: knowledge base editing** | Documents list and editor endpoints | Makes "answers come only from your Kita's documents" visibly live. |
 | **P3: insights** | Query log, feedback, `/staff/insights` | Nice for Q&A with judges; the UI can stay mocked. |
@@ -111,7 +111,7 @@ Status: ✅ built · 🟡 built, needs a change · ⬜ not built
 ```
 app/
   routers/   kitas.py  feedback.py  staff.py          (staff.py: login, announcements, documents, insights)
-  services/  store.py   (SQLite: schema + queries)   translate.py (announcement → 5 languages, via claude.py)
+  services/  store.py   (SQLite: schema + queries)   translate.py (announcement → en + de, via claude.py)
   auth.py    (bearer-token dependency for /staff/*)
 prompts/     translate_announcement.md
 data/seed/   announcements.json

@@ -41,7 +41,7 @@ Frontend (other team, Vite :8443) ── JSON/REST ──▶ FastAPI /api/v1 ─
 
 Three flows make the product:
 1. **Parent asks** → `POST /ask` → Claude answers *only* from the Kita documents (cached in the system prompt), cites the source, says "ask the teacher" when unsure → the question is logged anonymously.
-2. **Staff publishes** → staff writes one German announcement → `POST /staff/announcements` → one Claude call translates it into 5 languages with a cultural note → saved → parents see it in `GET /week?lang=`.
+2. **Staff publishes** → staff writes one German announcement → `POST /staff/announcements` → one Claude call translates it into English and German (simple German) with a cultural note → saved → parents see it in `GET /week?lang=`.
 3. **Staff edits a document** → `PUT /staff/documents/{name}` → file rewritten, prompt cache cleared → the next `/ask` uses the new text.
 
 `MOCK_AI=true` makes every endpoint answer without calling Claude (no key, no credits). Everything below can be built and tested in mock mode.
@@ -80,7 +80,7 @@ copy .env.example .env               # set MOCK_AI=true, or paste your Console A
 | A1 | `GET /kitas/{code}` in `routers/kitas.py`: values from `settings.kita_*`, case-insensitive, `NotFound("Kita code not found.")` otherwise | 10 min |
 | A2 | `POST /feedback` in `routers/feedback.py` using `logs.add_feedback` (already written) | 10 min |
 | A3 | Pass `child_name` / `parent_name` into the draft prompt; update `prompts/draft_message.md` (sign with the parent's name, name the child) | 15 min |
-| A4 | **Real-key quality pass** (`MOCK_AI=false`): ask the fever, Eingewöhnung, Laternenfest and "own lunch" questions in `en` and `ar`; tune `prompts/ask.md`. Check in the server log that the second identical call shows `cache_read` above 0 | 30 min |
+| A4 | **Real-key quality pass** (`MOCK_AI=false`): ask the fever, Eingewöhnung, Laternenfest and "own lunch" questions in `en` and `de`; tune `prompts/ask.md`. Check in the server log that the second identical call shows `cache_read` above 0 | 30 min |
 | A5 | `scripts/eval_questions.py` + `tests/eval_questions.json`: the domain expert's 10 questions, runs against the real API, prints answer, source and `answered_from_documents` for a human to check. Include 3 questions the documents do not cover | 25 min |
 | A6 | With the domain expert, replace the placeholder pack in `data/kita-sonnenblume/` with the real one. **Keep the demo facts:** today is Mon 2 Nov 2026, permission slip due Wed 4 Nov, Laternenfest Thu 5 Nov 17:00, Kita closed Fri 6 Nov, 24 h fever rule in house rules §4 | ongoing |
 

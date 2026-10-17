@@ -49,7 +49,7 @@ async def prewarm() -> None:
     import logging
 
     day = resolve_today(None)
-    for lang in ("en", "ar"):
+    for lang in ("en", "de"):
         try:
             await build_week(lang, day)
         except Exception as e:

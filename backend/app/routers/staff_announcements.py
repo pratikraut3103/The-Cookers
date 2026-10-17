@@ -3,7 +3,7 @@ in their language.
 
 Flow for POST (publish):
   1. validate AnnouncementIn
-  2. one Claude call -> TranslationsAI (en, ar, uk, tr, es) via claude.generate(...)
+  2. one Claude call -> TranslationsAI (en, de) via claude.generate(...)
   3. only if that succeeded: save the announcement + 5 translations
   4. return AnnouncementOut (so the UI never shows a half-published item)
 In MOCK_AI mode, return deterministic fake translations instead of calling Claude.

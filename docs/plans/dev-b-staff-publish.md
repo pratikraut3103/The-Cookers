@@ -5,7 +5,7 @@
 Context: `docs/TEAM_PLAN.md` (system, schedule, git rules) and `docs/ARCHITECTURE.md`. All paths are relative to `backend/`.
 
 ## Your job in one sentence
-Staff write **one German announcement**; Claude translates it into 5 languages with a cultural note; parents read it in their language on the week board.
+Staff write **one German announcement**; Claude translates it into English and simple German with a cultural note; parents read it in their language on the week board.
 
 ## Files you own (edit freely)
 `app/routers/staff_announcements.py` · `app/routers/week.py` · `app/services/announcements.py` · `app/services/translate.py` (new) · `prompts/translate_announcement.md` (new) · `data/seed/announcements.json` (new) · `tests/test_staff_publish.py`
@@ -15,7 +15,7 @@ Staff write **one German announcement**; Claude translates it into 5 languages w
 ## Helpers already available
 - Tables `announcements` and `translations` exist (`app/db.py`). `bring` is stored as JSON text (`json.dumps` / `json.loads`).
 - `from app.db import connect` → `with connect() as conn: conn.execute(...)` (commits on exit, rolls back on error, rows behave like dicts).
-- `claude.generate("translate_announcement", messages, TranslationsAI)` returns a validated `TranslationsAI` (en, ar, uk, tr, es).
+- `claude.generate("translate_announcement", messages, TranslationsAI)` returns a validated `TranslationsAI` (en, de).
 - Schemas: `AnnouncementIn`, `AnnouncementOut`, `Translation`, `TranslationsAI`, `PreviewResponse`, `WeekItem`.
 - `logs.now_iso()` for the `published_at` timestamp. Auth is already applied to `/staff/*` routes.
 
@@ -36,7 +36,7 @@ Functions (suggested): `create(body, translations) -> AnnouncementOut`, `list_al
 - `GET /staff/announcements` → newest first.
 
 ### B4. Seed data (20 min), `seed_if_empty()` + `data/seed/announcements.json`
-Called once at startup; when the table is empty, insert these (German source, ready-made `en` and `ar` translations copied from `frontend/src/App.tsx`, no Claude call needed):
+Called once at startup; when the table is empty, insert these (German source, ready-made `en` and `de` translations, no Claude call needed):
 
 | Type | German title | Date | Time | Bring |
 |---|---|---|---|---|
@@ -45,7 +45,7 @@ Called once at startup; when the table is empty, insert these (German source, re
 | closure | Kita geschlossen (Teamfortbildung) | 2026-11-06 | | |
 | reminder (recurring `daily`) | Matschhose und Gummistiefel mitbringen | none | | Matschhose, Gummistiefel |
 
-Seeded items have only `en` and `ar` translations. **Fallback rule** (implement it in the week code): if the requested language has no translation, use `en`; if there is no `en` either, use the German source.
+Seeded items ship both `en` and `de`. **Fallback rule** (for any announcement that lacks the requested language) (implement it in the week code): if the requested language has no translation, use `en`; if there is no `en` either, use the German source.
 
 ### B5. Week board from the store (25 min), `routers/week.py`
 Replace the Claude call in `build_week`:
@@ -58,7 +58,7 @@ Replace the Claude call in `build_week`:
 ## Rules for your code
 - Business logic goes in `services/`, routers stay thin.
 - Never save a half-published item. Test: `test_publish_failure_saves_nothing`.
-- Use real-key mode once (`MOCK_AI=false`) to read the Arabic and Ukrainian output of B2 and fix the prompt if it is stiff or invents details.
+- Use real-key mode once (`MOCK_AI=false`) to read the English and German output of B2 and fix the prompt if it is stiff or invents details.
 
 ## Hand-offs
 - **From Dev A:** nothing needed. **To Dev C:** nothing needed (insights read `query_log`, not announcements).

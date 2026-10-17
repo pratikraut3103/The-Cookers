@@ -18,8 +18,9 @@ def test_health(client):
 
 def test_languages(client):
     langs = client.get(f"{API}/languages").json()["languages"]
-    assert {l["code"] for l in langs} == {"en", "ar", "uk", "tr", "es"}
-    assert next(l for l in langs if l["code"] == "ar")["rtl"] is True
+    assert {l["code"] for l in langs} == {"en", "de"}
+    assert next(l for l in langs if l["code"] == "de")["label"] == "Deutsch"
+    assert all(l["rtl"] is False for l in langs)
 
 
 def test_ask_shape(client):
@@ -39,10 +40,17 @@ def test_ask_unknown_suggests_teacher(client):
 
 
 def test_draft_message(client):
-    r = client.post(f"{API}/draft-message", json={"text": "Yusuf kommt spät", "lang": "ar"})
+    r = client.post(f"{API}/draft-message", json={"text": "Yusuf will be late", "lang": "en"})
     assert r.status_code == 200
     assert set(r.json()) == {"german_message", "back_translation", "lang"}
-    assert r.json()["lang"] == "ar"
+    assert r.json()["lang"] == "en"
+
+
+@pytest.mark.parametrize("lang", ["ar", "uk", "tr", "es", "xx"])
+def test_removed_languages_are_rejected(client, lang):
+    r = client.post(f"{API}/ask", json={"question": "fever?", "lang": lang})
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "invalid_request"
 
 
 def test_week(client):

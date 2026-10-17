@@ -9,14 +9,14 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-LangCode = Literal["en", "ar", "uk", "tr", "es"]
+LangCode = Literal["en", "de"]
 
+# Adding a language later: add it here, add a field to TranslationsAI below, and add its
+# translations to data/seed/announcements.json. `rtl` is kept so right-to-left languages
+# (e.g. Arabic) can come back without changing the API.
 LANGUAGES: dict[str, dict] = {
     "en": {"label": "English", "name": "English", "rtl": False},
-    "ar": {"label": "العربية", "name": "Arabic", "rtl": True},
-    "uk": {"label": "Українська", "name": "Ukrainian", "rtl": False},
-    "tr": {"label": "Türkçe", "name": "Turkish", "rtl": False},
-    "es": {"label": "Español", "name": "Spanish", "rtl": False},
+    "de": {"label": "Deutsch", "name": "German", "rtl": False},
 }
 
 
@@ -177,10 +177,7 @@ class Translation(Strict):
 class TranslationsAI(Strict):
     """What Claude returns when translating an announcement: one entry per language."""
     en: Translation
-    ar: Translation
-    uk: Translation
-    tr: Translation
-    es: Translation
+    de: Translation
 
 
 class AnnouncementOut(AnnouncementIn):
