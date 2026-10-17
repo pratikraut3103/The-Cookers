@@ -45,3 +45,30 @@ def test_draft_accepts_names(client):
         "child_name": "Yusuf", "parent_name": "Amira",
     })
     assert r.status_code == 200
+
+
+def test_eval_questions_file_is_valid():
+    import json
+    from pathlib import Path
+
+    questions = json.loads((Path(__file__).parent / "eval_questions.json").read_text(encoding="utf-8"))
+    assert len(questions) == 10
+    assert sum(q["expected_source"] is None for q in questions) >= 3  # questions the pack does not cover
+    assert all({"question", "lang", "expected_source"} == set(q) for q in questions)
+
+
+def test_eval_verdict_marks():
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "eval_questions", Path(__file__).parent.parent / "scripts" / "eval_questions.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    cited = {"answered_from_documents": True, "sources": [{"document": "house-rules.md", "section": "§4"}]}
+    refused = {"answered_from_documents": False, "sources": []}
+    assert module.verdict("house-rules.md", cited).strip() == "PASS"
+    assert module.verdict("calendar.md", cited).strip() == "CHECK"
+    assert module.verdict(None, refused).strip() == "PASS"
+    assert module.verdict(None, cited).strip() == "CHECK"
