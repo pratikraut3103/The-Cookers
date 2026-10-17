@@ -16,11 +16,11 @@
         "bring": [],
         "cultural_note": "In Germany, Kitas need written permission from parents for every trip outside the Kita."
       },
-      "ar": {
-        "title": "وقّع إذن الرحلة",
-        "message": "وقّع الورقة وأعطها للمربية.",
+      "de": {
+        "title": "Ausflug: Erlaubnis unterschreiben",
+        "message": "Bitte unterschreiben Sie den Zettel für den Ausflug und geben Sie ihn in der Gruppe ab.",
         "bring": [],
-        "cultural_note": "تحتاج الروضات في ألمانيا إلى إذن مكتوب من الوالدين لكل رحلة خارج الروضة."
+        "cultural_note": "In Deutschland brauchen Kitas für jeden Ausflug eine schriftliche Erlaubnis der Eltern."
       }
     }
   },
@@ -41,11 +41,11 @@
         "bring": ["a homemade lantern"],
         "cultural_note": "A German autumn tradition: children walk through the streets with lanterns and sing songs. Parents usually come along."
       },
-      "ar": {
-        "title": "مسيرة الفوانيس (Laternenfest)",
-        "message": "يوم الخميس نحتفل بمهرجان الفوانيس. يرجى صنع فانوس في المنزل مع طفلكم وإحضاره الساعة 17:00. الأهالي مدعوون بحرارة!",
-        "bring": ["فانوس منزلي الصنع"],
-        "cultural_note": "تقليد خريفي ألماني: يمشي الأطفال بالفوانيس ويغنون. عادةً يشارك الوالدان."
+      "de": {
+        "title": "Laternenfest",
+        "message": "Am Donnerstag feiern wir das Laternenfest. Bitte basteln Sie zu Hause mit Ihrem Kind eine Laterne. Bringen Sie die Laterne um 17 Uhr mit. Eltern sind herzlich willkommen!",
+        "bring": ["selbstgebastelte Laterne"],
+        "cultural_note": "Eine deutsche Herbsttradition: Die Kinder gehen mit Laternen durch die Straßen und singen Lieder. Meistens kommen die Eltern mit."
       }
     }
   },
@@ -66,11 +66,11 @@
         "bring": [],
         "cultural_note": "Please plan other childcare for this day."
       },
-      "ar": {
-        "title": "الروضة مغلقة (تدريب الموظفين)",
-        "message": "يوم الجمعة تبقى الروضة مغلقة بسبب تدريب الموظفين.",
+      "de": {
+        "title": "Kita geschlossen (Fortbildung)",
+        "message": "Am Freitag ist die Kita geschlossen, weil das Team eine Fortbildung hat.",
         "bring": [],
-        "cultural_note": "يرجى ترتيب رعاية أخرى لطفلك في هذا اليوم."
+        "cultural_note": "Bitte organisieren Sie für diesen Tag eine andere Betreuung."
       }
     }
   },
@@ -91,11 +91,11 @@
         "bring": ["rain trousers", "rain boots"],
         "cultural_note": "German Kitas go outside in every weather, also in rain and cold."
       },
-      "ar": {
-        "title": "أحضر بنطال المطر وحذاء المطر (Matschhose)",
-        "message": "يرجى إرسال طفلكم كل يوم مع بنطال المطر وحذاء المطر وملابس للتبديل.",
-        "bring": ["بنطال المطر", "حذاء المطر"],
-        "cultural_note": "تخرج الروضات الألمانية في كل أنواع الطقس، حتى في المطر والبرد."
+      "de": {
+        "title": "Matschhose und Gummistiefel mitbringen",
+        "message": "Bitte geben Sie Ihrem Kind jeden Tag Matschhose, Gummistiefel und Wechselkleidung mit.",
+        "bring": ["Matschhose", "Gummistiefel"],
+        "cultural_note": "Deutsche Kitas gehen bei jedem Wetter nach draußen, auch bei Regen und Kälte."
       }
     }
   }

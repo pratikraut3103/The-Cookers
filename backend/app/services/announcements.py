@@ -135,7 +135,7 @@ def delete(announcement_id: int) -> bool:
 def seed_if_empty(path: Path = SEED_FILE) -> int:
     """Called once at startup. Loads the starter announcements when the table is empty.
 
-    The seed ships ready-made translations (en, ar), so it needs no Claude call. Bad seed data
+    The seed ships ready-made translations (en, de), so it needs no Claude call. Bad seed data
     fails loudly here (validation), not silently on the parent's screen. Returns rows inserted.
     """
     with connect() as conn:

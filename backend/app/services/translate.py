@@ -22,7 +22,7 @@ def mock_translations(body: AnnouncementIn) -> dict[str, Translation]:
 
 
 async def translate(body: AnnouncementIn) -> dict[str, Translation]:
-    """Return {lang: Translation} for en, ar, uk, tr, es. Raises AIError if Claude fails."""
+    """Return {lang: Translation} for every language in LANGUAGES (en, de). Raises AIError if Claude fails."""
     if get_settings().mock_ai:
         return mock_translations(body)
 

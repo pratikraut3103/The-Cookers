@@ -1,7 +1,7 @@
 """Dev B acceptance tests (feat/staff-publish). Red until the stubs are implemented."""
 
 API = "/api/v1"
-LANGS = {"en", "ar", "uk", "tr", "es"}
+LANGS = {"en", "de"}
 
 NEW = {
     "type": "event",
@@ -34,9 +34,9 @@ def test_list_returns_published(client, staff):
 
 def test_published_item_appears_in_week_in_parent_language(client, staff):
     ann = publish(client, staff)
-    week = client.get(f"{API}/week", params={"lang": "ar", "today": "2026-11-04"}).json()
+    week = client.get(f"{API}/week", params={"lang": "de", "today": "2026-11-04"}).json()
     item = next(i for i in week["items"] if i["id"] == ann["id"])
-    assert item["title"] == ann["translations"]["ar"]["title"]
+    assert item["title"] == ann["translations"]["de"]["title"]
     assert item["date"] == "2026-11-05"
     assert item["is_new"] is True
 
@@ -136,11 +136,25 @@ def test_update_unknown_is_404_without_calling_claude(client, staff, monkeypatch
     assert r.status_code == 404
 
 
-def test_week_falls_back_to_english_when_language_missing(client):
-    """The seed only ships en and ar; Ukrainian parents get the English text, not an empty board."""
-    uk = client.get(f"{API}/week", params={"lang": "uk", "today": "2026-11-04"}).json()
-    en = client.get(f"{API}/week", params={"lang": "en", "today": "2026-11-04"}).json()
-    assert [i["title"] for i in uk["items"]] == [i["title"] for i in en["items"]]
+def test_week_in_german_uses_the_german_texts(client):
+    items = client.get(f"{API}/week", params={"lang": "de", "today": "2026-11-04"}).json()["items"]
+    lantern = next(i for i in items if i["time"] == "17:00")
+    assert lantern["title"] == "Laternenfest"
+    assert lantern["bring"] == ["selbstgebastelte Laterne"]
+    assert "Herbsttradition" in lantern["cultural_note"]
+
+
+def test_missing_translation_falls_back_to_english_then_the_german_original():
+    from app.routers.week import pick_translation
+    from app.schemas import AnnouncementOut, Translation
+
+    base = dict(id=1, type="event", title="Fest", message="Text", starts_on="2026-11-05",
+                published_at="2026-10-01T08:00:00+00:00")
+    with_en = AnnouncementOut(**base, translations={"en": Translation(title="Party", message="")})
+    assert pick_translation(with_en, "de").title == "Party"
+    assert pick_translation(with_en, "en").title == "Party"
+    without = AnnouncementOut(**base, translations={})
+    assert pick_translation(without, "de").title == "Fest"
 
 
 def test_week_is_ordered_dated_first_recurring_last(client):
@@ -159,7 +173,7 @@ def test_week_shows_deadline_on_its_deadline_date(client, staff):
 
 
 def test_translate_sends_only_text_to_claude(monkeypatch):
-    """Real-mode path with Claude stubbed: dates stay out of the prompt, all 5 languages come back."""
+    """Real-mode path with Claude stubbed: dates stay out of the prompt, both languages come back."""
     import asyncio
 
     from app.config import get_settings
@@ -172,7 +186,7 @@ def test_translate_sends_only_text_to_claude(monkeypatch):
     async def fake_generate(prompt_name, messages, output):
         seen.update(prompt=prompt_name, content=messages[0]["content"], output=output)
         t = Translation(title="t", message="m", bring=["b"], cultural_note=None)
-        return TranslationsAI(en=t, ar=t, uk=t, tr=t, es=t)
+        return TranslationsAI(en=t, de=t)
 
     monkeypatch.setattr(claude, "generate", fake_generate)
     body = AnnouncementIn(**NEW)
